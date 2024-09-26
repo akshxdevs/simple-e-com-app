@@ -23,7 +23,8 @@ productRouter.post("/",async (req,res)=>{
             productDescription,
             productPrice,
             category,
-            productImg
+            productImg,
+            productRating
         } = req.body
 
         const addNewProduct = await Product.create({
@@ -31,7 +32,8 @@ productRouter.post("/",async (req,res)=>{
             productDescription,
             productPrice,
             category,
-            productImg
+            productImg,
+            productRating
         })
         res.status(200).json({
             message:"CREATED SUCESSFULLY!",
