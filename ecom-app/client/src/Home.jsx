@@ -1,6 +1,8 @@
 import axios from "axios";
+import { parse } from "dotenv";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 export const Home = () => {
     const [login, setLogin] = useState(false);
@@ -15,10 +17,12 @@ export const Home = () => {
     const [showPop, setShowPop] = useState(false);
     const [message, setMessage] = useState("");
     const initialValue = 40;
+    const [showCartProducts,setShowCartProducts] = useState(0)
     const [pincode, setPincode] = useState("");
     const popupInterval = 1 * 60 * 1000;
     const [showMessage, setShowMessage] = useState(false);
     const [isPopupCompleted, setIsPopupCompleted] = useState(false); 
+    const navigate = useNavigate();
     useEffect(() => {
         const getUsername = localStorage.getItem("username");
         if (getUsername) {
@@ -137,6 +141,48 @@ export const Home = () => {
         closePopup();
     };
 
+    const handleAddToCartBtn = (productName,productImg,productPrice,productId) => {
+        let noOfProductsINCart = 0;
+        const newItem = {
+            productName,
+            productImg,
+            productPrice,
+            productId
+        }
+
+        let existingCart = localStorage.getItem("cart");
+        if (!existingCart) {
+            existingCart = [];
+        }else{
+            try {
+                existingCart = JSON.parse(existingCart);
+                noOfProductsINCart = existingCart.length;
+            } catch (error) {
+                console.error("Error parsing cart data:", error);
+                existingCart = []
+            }
+        }
+
+        const isProductInCart = existingCart.some(item => item.productId === productId);
+        if (!isProductInCart) {
+            existingCart.push(newItem);
+            noOfProductsINCart++;
+            setShowCartProducts(noOfProductsINCart);
+        }else{
+            toast.warn(`${productName} is already in cart`);
+        }
+        try {
+            const cartString =JSON.stringify(existingCart);
+            localStorage.setItem("cart",cartString);
+        } catch (error) {
+            console.error(error);
+        }
+        
+        toast.success(`${productName} Added to the cart sucessfully..`)
+        console.log(noOfProductsINCart);
+        
+    }
+
     return (
         <div>
             <h1>E-com App</h1>
@@ -151,10 +197,10 @@ export const Home = () => {
                 }}>
                     All Products
                 </button>
+                <button onClick={()=>{navigate("/cart")}}>🛒</button>{showCartProducts}
             </div>
             <div>
                 <button onClick={() => setShowFilter((prevState)=> !prevState)}>Filter</button>
-
                 {showFilter && (
                     <div>
                         {initialValue}
@@ -218,6 +264,7 @@ export const Home = () => {
                             <p>Price: {product.productPrice}rs</p>
                             <p>Category: {product.category}</p>
                             <p>Rating: {product.productRating}</p>
+                            <button onClick={()=>handleAddToCartBtn(product.productName,product.productImg,product.productPrice,product._id)}>Add to cart</button> <br /> <br />
                         </div>
                     ))
                 ) : (
@@ -239,6 +286,9 @@ export const Home = () => {
                     </div>
                 </div>
             )}
+            <ToastContainer/>
         </div>
+        
     );
+    
 };
