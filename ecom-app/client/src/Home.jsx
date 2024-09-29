@@ -1,5 +1,4 @@
 import axios from "axios";
-import { parse } from "dotenv";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";

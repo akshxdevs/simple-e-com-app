@@ -5,6 +5,7 @@ import { Login } from './Login';
 import { Home } from './Home';
 import { Cart } from './Cart';
 import { Checkout } from './Checkout';
+import { Payment } from './Payment';
 function App() {
   return (
       <Router>
@@ -14,6 +15,7 @@ function App() {
           <Route path='/signup' element={<Signup/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/checkout' element={<Checkout/>}/>
+          <Route path='/payment' element={<Payment/>}/>
         </Routes>
       </Router>
     

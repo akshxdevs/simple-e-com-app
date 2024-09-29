@@ -21,6 +21,7 @@ export const Cart = () => {
     };
 
     const totalprice = cart.reduce((acc,item) => acc + item.productPrice,0);
+    localStorage.setItem("totalprice",totalprice);
     console.log(totalprice);
     
 
@@ -34,8 +35,8 @@ export const Cart = () => {
                         <h4>{item.productName}</h4>
                         <p>Price: {item.productPrice}rs</p>
                         <button onClick={() => handleRemoveFromCart(item.productId)}>Remove</button>
-                        <p>Grand Total: {totalprice}</p>
                     </div>
+                    
                 ))
             ) : (
                 <div>
@@ -43,6 +44,7 @@ export const Cart = () => {
                     <p>Grand Total: 0</p>
                 </div>
             )}
+            <p>Grand Total: {totalprice}</p>
             <button onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
         </div>
     );
